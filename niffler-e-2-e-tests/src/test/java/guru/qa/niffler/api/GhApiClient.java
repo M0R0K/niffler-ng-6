@@ -19,12 +19,14 @@ public class GhApiClient {
 
   private final GhApi ghApi = retrofit.create(GhApi.class);
 
+
   @SneakyThrows
   public String issueState(String issueNumber) {
     JsonNode responseBody = ghApi.issue(
         "Bearer " + System.getenv(GH_TOKEN_ENV),
         issueNumber
     ).execute().body();
+    System.out.println(Objects.requireNonNull(responseBody).get("state").asText());
     return Objects.requireNonNull(responseBody).get("state").asText();
   }
 }
