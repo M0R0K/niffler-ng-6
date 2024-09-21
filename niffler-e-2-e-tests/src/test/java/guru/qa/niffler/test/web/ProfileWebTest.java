@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
@@ -11,9 +12,10 @@ import org.junit.jupiter.api.Test;
 public class ProfileWebTest {
     private static final Config CFG = Config.getInstance();
 
-    @Category(
-            username = "test",
-            archived = false)
+    @User(
+            name = "test", categories = @Category(
+            archived = false
+    ))
     @Test
     void categoryIsArchivedSuccessfully(CategoryJson category) {
 
@@ -32,9 +34,10 @@ public class ProfileWebTest {
     }
 
 
-    @Category(
-            username = "test",
-            archived = true)
+    @User(
+            name = "test", categories = @Category(
+            archived = true
+    ))
     @Test
     void categoryIsUnarchivedSuccessfully(CategoryJson category) {
         final String successMessage = "Category " + category.name() + " is unarchived";
