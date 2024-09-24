@@ -34,14 +34,14 @@ enum LocalConfig implements Config {
     }
 
     @Override
-  public String gatewayUrl() {
-    return "http://127.0.0.1:8090/";
-  }
+    public String gatewayUrl() {
+        return "http://127.0.0.1:8090/";
+    }
 
-  @Override
-  public String userdataUrl() {
-      return "http://127.0.0.1:8089/";
-  }
+    @Override
+    public String userdataUrl() {
+        return "http://127.0.0.1:8089/";
+    }
 
     @Override
     public String userdataJdbcUrl() {

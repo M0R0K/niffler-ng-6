@@ -2,28 +2,28 @@ package guru.qa.niffler.config;
 
 public interface Config {
 
-  static Config getInstance() {
-    return LocalConfig.INSTANCE;
-  }
+    static Config getInstance() {
+        return LocalConfig.INSTANCE;
+    }
 
-  String frontUrl();
+    String frontUrl();
 
-  String spendUrl();
+    String spendUrl();
 
-  String spendJdbcUrl();
+    String spendJdbcUrl();
 
-  String ghUrl();
+    String ghUrl();
 
-  String authUrl();
+    String authUrl();
 
-  String authJdbcUrl();
+    String authJdbcUrl();
 
-  String gatewayUrl();
+    String gatewayUrl();
 
-  String userdataUrl();
+    String userdataUrl();
 
-  String userdataJdbcUrl();
+    String userdataJdbcUrl();
 
-  String currencyJdbcUrl();
+    String currencyJdbcUrl();
 }
 

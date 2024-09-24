@@ -6,6 +6,11 @@ import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.SpendJson;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 public class SpendDbClient {
     private final SpendDao spendDao = new SpendDaoJdbc();
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
@@ -18,5 +23,25 @@ public class SpendDbClient {
         return SpendJson.fromEntity(
                 spendDao.create(spendEntity)
         );
+    }
+
+    public Optional<SpendEntity> findSpendById(UUID id) {
+        return spendDao.findSpendById(id);
+    }
+
+    public List<SpendEntity> findAllSpendsByUsername(String username) {
+        return spendDao.findAllByUsername(username);
+    }
+
+    public void deleteSpend(SpendEntity spend) {
+        spendDao.deleteSpend(spend);
+    }
+
+    public void deleteSpendJson(SpendJson spendJson) {
+        // Проверяем, существует ли SpendEntity с данным ID
+        Optional<SpendEntity> spendEntity = spendDao.findSpendById(spendJson.id());
+
+        // Если запись найдена, удаляем её
+        spendEntity.ifPresent(spendDao::deleteSpend);
     }
 }

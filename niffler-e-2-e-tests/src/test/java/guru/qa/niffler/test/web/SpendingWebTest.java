@@ -11,16 +11,17 @@ import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+
 @ExtendWith(BrowserExtension.class)
 public class SpendingWebTest {
 
     private static final Config CFG = Config.getInstance();
 
     @User(
-            name  = "test",
-        spendings  = @Spending(category = "Обучение",
-                 description = "Обучение Advanced 2.0",
-                 amount = 79990)
+            name = "test",
+            spendings = @Spending(category = "Обучение",
+                    description = "Описание",
+                    amount = 79990)
     )
 
 
@@ -33,7 +34,6 @@ public class SpendingWebTest {
                 .editSpending(spend.description())
                 .setNewSpendingDescription(newDescription)
                 .save();
-
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
 
