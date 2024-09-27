@@ -20,6 +20,7 @@ public class ProfileWebTest {
     void categoryIsArchivedSuccessfully(CategoryJson category) {
 
         final String successMessage = "Category " + category.name() + " is archived";
+        System.out.println(category.name());
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("test", "123456")
                 .menuButtonClick()

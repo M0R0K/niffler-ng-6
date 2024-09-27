@@ -1,11 +1,14 @@
 package guru.qa.niffler.jupiter.extension;
 
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.service.CategoryDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
+
+import java.util.Optional;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
 
@@ -43,10 +46,11 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
 
-        CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (category != null) {
-            categoryDbClient.deleteCategoryJson(category);
-        }
+        Optional.ofNullable(context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class))
+                .ifPresent(category -> {
+                    CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+                    categoryDbClient.deleteCategory(categoryEntity);
+                });
     }
 
     @Override

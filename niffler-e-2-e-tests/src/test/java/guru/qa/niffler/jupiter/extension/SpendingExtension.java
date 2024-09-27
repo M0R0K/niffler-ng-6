@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -12,8 +12,8 @@ import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Date;
+import java.util.Optional;
 
-import static guru.qa.niffler.utils.RandomDataUtils.*;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
 
@@ -59,11 +59,12 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver,
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
 
-        SpendJson spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
-        if (spend != null) {
-            spendDbClient.deleteSpendJson(spend);
-            categoryDbClient.deleteCategoryJson(spend.category());
-        }
+        Optional.ofNullable(context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class))
+                .ifPresent(spend -> {
+                    SpendEntity spendEntity = SpendEntity.fromJson(spend);
+                    spendDbClient.deleteSpend(spendEntity);
+                });
+
     }
 
     @Override
