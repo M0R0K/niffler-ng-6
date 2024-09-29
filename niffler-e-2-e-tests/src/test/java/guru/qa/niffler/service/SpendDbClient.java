@@ -7,6 +7,7 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.SpendJson;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import static guru.qa.niffler.data.Databases.transaction;
 public class SpendDbClient {
 
     private static final Config CFG = Config.getInstance();
-
+    private static final int TRANSACTION_ISOLATION_LEVEL = Connection.TRANSACTION_SERIALIZABLE; // взял самый высокий уровень изоляции транзакций
 
     public SpendJson createSpend(SpendJson spend) {
         return transaction(connection -> {
@@ -30,7 +31,9 @@ public class SpendDbClient {
                             new SpendDaoJdbc(connection).create(spendEntity)
                     );
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                TRANSACTION_ISOLATION_LEVEL
+
         );
     }
 
@@ -46,13 +49,16 @@ public class SpendDbClient {
         return transaction(connection -> {
                     return new SpendDaoJdbc(connection).findAllByUsername(username);
                 },
-                CFG.spendJdbcUrl()
+                CFG.spendJdbcUrl(),
+                TRANSACTION_ISOLATION_LEVEL
+
         );
     }
 
     public void deleteSpend(SpendEntity spend) {
         transaction(connection -> {
                     new SpendDaoJdbc(connection).deleteSpend(spend);
+                    return null;
                 },
                 CFG.spendJdbcUrl()
         );
@@ -66,6 +72,7 @@ public class SpendDbClient {
                     // Если запись найдена, удаляем её
                     spendEntity.ifPresent(spend -> new SpendDaoJdbc(connection).deleteSpend(spend));
 
+                    return null;
                 },
                 CFG.spendJdbcUrl()
         );

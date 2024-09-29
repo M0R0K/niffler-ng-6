@@ -11,8 +11,6 @@ import java.util.UUID;
 import static guru.qa.niffler.data.Databases.transaction;
 
 public class CategoryDbClient {
-    //  private final CategoryDao categoryDao = new CategoryDaoJdbc();
-
     private static final Config CFG = Config.getInstance();
 
     public CategoryJson createCategoryJson(CategoryJson category) {
@@ -52,6 +50,7 @@ public class CategoryDbClient {
     public void deleteCategory(CategoryEntity category) {
         transaction(connection -> {
             new CategoryDaoJdbc(connection).deleteCategory(category);
+            return null;
         }, CFG.spendJdbcUrl());
     }
 
@@ -64,6 +63,7 @@ public class CategoryDbClient {
 
             // Если категория найдена, удаляем её
             categoryEntity.ifPresent(entity -> new CategoryDaoJdbc(connection).deleteCategory(entity));
+            return null;
         }, CFG.spendJdbcUrl());
     }
 }
