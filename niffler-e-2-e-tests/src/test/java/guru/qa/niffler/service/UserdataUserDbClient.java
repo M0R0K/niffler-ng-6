@@ -1,29 +1,40 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.dao.impl.UserdataUserDaoJdbc;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.user.UserdataUserEntity;
 
 import java.util.Optional;
 import java.util.UUID;
 
+import guru.qa.niffler.data.dao.impl.UserdataUserDaoJdbc;
+
+import static guru.qa.niffler.data.Databases.transaction;
+
 public class UserdataUserDbClient {
 
-    private final UserdataUserDao userDAO = new UserdataUserDaoJdbc();
+    private static final Config CFG = Config.getInstance();
 
     public UserdataUserEntity create(UserdataUserEntity user) {
-        return userDAO.create(user);
+        return transaction(connection -> {
+            return new UserdataUserDaoJdbc(connection).create(user);
+        }, CFG.userdataJdbcUrl());
     }
 
     public Optional<UserdataUserEntity> findById(UUID id) {
-        return userDAO.findById(id);
+        return transaction(connection -> {
+            return new UserdataUserDaoJdbc(connection).findById(id);
+        }, CFG.userdataJdbcUrl());
     }
 
     public Optional<UserdataUserEntity> findByUsername(String username) {
-        return userDAO.findByUsername(username);
+        return transaction(connection -> {
+            return new UserdataUserDaoJdbc(connection).findByUsername(username);
+        }, CFG.userdataJdbcUrl());
     }
 
     public void delete(UserdataUserEntity user) {
-        userDAO.delete(user);
+        transaction(connection -> {
+            new UserdataUserDaoJdbc(connection).delete(user);
+        }, CFG.userdataJdbcUrl());
     }
 }
